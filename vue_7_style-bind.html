@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뷰 기초 익히기</title>
+    <style>
+        .red {
+            color:red;
+        }
+        .font-bold{
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!--원래 font-size 로 입력되어야 하는 부분이 fontSize로 입력된 게 포인트-->
+        <!-- <div :style="{color:fcolor, fontSize:size}">Hello</div> -->
+        <div v-bind:style="styleObj">Hello</div>
+        <button @click="update">Click</button>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data: {
+                // fcolor:'red',
+                // size:'30px'
+                styleObj:{
+                    color:'red',
+                    fontSize:'20px'
+                }
+            },
+            methods:{
+                update() {
+                    this.isRed=!this.isRed;
+                    this.isBold=!this.isBold;
+                }
+            },
+        })
+    </script>
+</body>
+</html>

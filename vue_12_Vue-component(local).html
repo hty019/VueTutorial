@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뷰 기초 익히기</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        {{name}}<br>
+        <button @click="changeText">Click</button>
+        <hty-button></hty-button>
+    </div>    
+    <script>
+        //선언 순서에 영향을 받는다. 유의할 것
+        const HelloWorld={
+            template:'<div>hello world</div>'
+        };
+        const HtyButton = {
+            components: {
+                'hello-world':HelloWorld
+            },
+            template: 
+            `<div>
+                {{name}}<br>
+                <hello-world></hello-world>
+                <button @click="changeText">Click</button>
+            </div>`,
+            data() {
+                return {
+                    name:'hty'
+                }
+            },
+            methods:{
+                changeText() {
+                    this.name='hty updated';
+                }
+            }
+        }
+        // const HelloWorld={
+        //     template:'<div>hello world</div>'
+        // };
+        const app=new Vue({
+            el:'#app',
+            components: {
+                'hty-button':HtyButton
+            }
+        })
+    </script>
+</body>
+</html>

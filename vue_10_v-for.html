@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뷰 기초 익히기</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- <div v-for="person in people"> -->
+        <!-- <div v-for="(person,idx) of people">--><!--idx는 필요시 추가사항 -->
+        <!-- <div v-for="(person,idx) of people" :key="person.name+'-'+person.age">--><!--고유키를 등록하는데, 중복을 고려하여 복합키로 연결해줌 -->
+        <!-- <div v-for="(person,idx) of people" :key="person.id">
+            {{person.name}} {{person.age}} {{idx}}
+        </div> -->
+        <!-- <div v-for="value in obj">
+            {{value}}
+        </div> -->
+        <!-- <div v-for="(value,name) in obj"> 
+            {{name}}:{{value}}
+        </div>--><!--이렇게도 응용가능 -->
+        <div v-for="(value,name,idx) in obj">
+            {{idx}} , {{name}}:{{value}}
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data: {
+              people:[
+                  {id: 1,name:'a',age:20},
+                  {id: 2,name:'b',age:21},
+                  {id: 3,name:'c',age:22},
+                  {id: 4,name:'d',age:23}
+              ],
+              obj:{
+                title:'Yes this is Heaven',
+                author:'taeyeon',
+                publishedAt:'21-05-24'
+              }
+            },
+            methods:{
+               
+            }
+        })
+    </script>
+</body>
+</html>

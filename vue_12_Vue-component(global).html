@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뷰 기초 익히기</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        {{name}}<br>
+        <button @click="changeText">Click</button>
+        <hty-button></hty-button>
+    </div>
+    <div id="app-1">
+        {{name}}<br>
+        <button @click="changeText">Click</button>
+        <!--컴포넌트는 당연하게도, 뷰 인스턴스 안에 위치해야 
+        템플릿이 작동한다.-->
+        <hty-button></hty-button>
+    </div>
+    <script>
+        //컴포넌트를 전역으로 등록해서 어떤 뷰 인스턴스에서든
+        //사용할 수 있도록 선언한 것이 이 부분의 주된 내용이다.
+        Vue.component('hello-world',{
+            template:'<div>hello world</div>'
+        });
+        Vue.component('hty-button',{
+            template: 
+            `<div>
+                {{name}}<br>
+                <hello-world></hello-world>
+                <button @click="changeText">Click</button>
+            </div>`,
+            //컴포넌트의 경우, 인스턴스 전체가 변수를 공유하기 때문에,
+            //변수로 작성하면 변수에 변동을 줄 경우 모든 변수가 업데이트된다.
+            //따라서 메서드로 객체를 반환하도록 지정하여 변수의 동기화를 방지한다.
+            data() {
+                return {
+                    name:'hty'
+                }
+            },
+            methods:{
+                changeText() {
+                    this.name='hty updated';
+                }
+            }
+        });
+
+        const app=new Vue({
+            el:'#app',
+            data: {
+              name:'kossie'
+            },
+            methods:{
+               changeText() {
+                   app1.name='앱1 업데이트완료'
+               }
+            }
+        })
+        const app1=new Vue({
+            el:'#app-1',
+            data: {
+              name:'kossie'
+            },
+            methods:{
+               changeText() {
+                   app.name='앱 업데이트완료'
+               }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뷰 기초 익히기</title>
+    <style>
+        .red {
+            color:red;
+        }
+        .font-bold{
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!--show 변수의 t/f에 따라 렌더링이 되거나 안된다.-->
+        <!-- <template v-if="show"> -->
+        <template v-if="number === 1">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+        </template>
+        <div v-else-if="number===2">Hi</div>
+        <!-- <div v-if="show">Yes</div> -->
+        <div v-else>No</div>
+        <!-- <button @click="toggleShow">Toggle</button> -->
+        <button @click="increaseNumber">Increase</button> {{number}}
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data: {
+                // show:true
+                number:1
+            },
+            methods:{
+                // toggleShow() {
+                //     this.show=!this.show;
+                // }
+                increaseNumber() {
+                    this.number++;
+                    if(this.number>3){
+                        this.number=1;
+                    }
+                }
+            },
+        })
+    </script>
+</body>
+</html>

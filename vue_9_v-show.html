@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뷰 기초 익히기</title>
+    <style>
+        .red {
+            color:red;
+        }
+        .font-bold{
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div v-show="show">Show!</div>
+        <br>
+        <button @click="toggle">Toggle</button>
+    </div>
+    <script>
+        /**
+         *  v_if는 진짜 조건부 렌더링이다. 초기 렌더링에서 조건이 거짓인 경우 아무것도 하지 않는다.
+            조건이 참일 때까지 렌더링 하지 않는다.
+
+            v-show는 조건에 관계없이 엘리먼트가 항상 렌더링된다. 
+
+            따라서, v-if는 토글비용이 높고, v-show는 초기 렌더링 비용이 높다.
+            자주 바뀌는 사항이라면 v-show를, 조건이 바뀌지 않는다면 v-if를 권장한다.
+         */ 
+        new Vue({
+            el:'#app',
+            data: {
+                show:true
+            },
+            methods:{
+                toggle() {
+                    this.show=!this.show;
+                }
+            },
+        })
+    </script>
+</body>
+</html>
