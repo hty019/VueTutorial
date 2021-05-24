@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뷰 기초 익히기</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        {{ nextYear() }}
+        <!-- <input v-bind:type="type" v-bind:value="inputData"> -->
+        <input :type="type" :value="inputData">
+        <a :href="getLink('greate')">코코채</a>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data: {
+                person:{
+                    name:'코지 코더',
+                    age:34
+                },
+                inputData:'hello',
+                type:'text',
+                link: 'localhost:8080/'
+            },
+            methods:{
+                getLink(name) {
+                    return this.link+name;
+                },
+                nextYear: function() {
+                    return this.person.name + '허허';
+                }
+            }
+        })
+    </script>
+</body>
+</html>

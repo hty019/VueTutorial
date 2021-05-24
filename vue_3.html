@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뷰 기초 익히기</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        
+        <!-- <form v-on:submit="submit"> -->
+        <form v-on:submit.prevent="submit"><!--공식 페이지 이벤트 핸들링 참고하면 prevent를 비롯한 여러가지 옵션이 존재함-->
+            <!-- <input type="text" :value="text" @keyup="updateText"><br> -->
+            <input type="text" v-model="text"><br>
+            {{text}}<br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data: {
+                year: 2021,
+                text:"text"
+            },
+            methods:{
+                submit() {
+                    alert('submitted');
+                    console.log('냐하')
+                },
+                // updateText({target}){
+                //     this.text=target.value;
+                // }
+            }
+        })
+    </script>
+</body>
+</html>

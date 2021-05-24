@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>뷰 기초 익히기</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!--문자열을 한 글자 단위로 잘라서 array를 리턴하고, 역순정렬한다음, join메서드로 배열을 스트링으로 합쳐줌-->
+        <!-- {{ message.split('').reverse().join('') }} -->
+        <!-- {{ reversedMessage() }}
+        {{ reversedMessage() }}
+        {{ reversedMessage() }} -->
+        {{ reversedMessage }}
+        {{ reversedMessage }}
+        {{ reversedMessage }}
+        <button @click="changeMessage">Click</button>
+    </div>
+    <script>
+        /**
+         *  method와 computed의 차이는 캐싱 여부이다.
+            computed는 변수값을 로드하고 컴파일 과정에서 계산값을 캐싱한다.
+            따라서, 동일한 computed 속성을 다회 출력해도 매번 연산하는 것이 아닌 저장된 값을 로드할 뿐이다.
+            >>효율적이다
+
+            but, 메서드는 호출될 때마다 연산한다.
+
+            만약, 중간에 의존하는 변수에 변동이 생긴다면, 변동사항을 캐치해서 다시 반영해준다.
+        */
+        new Vue({
+            el:'#app',
+            data: {
+                message:'안녕하세요'
+            },
+            methods:{
+                changeMessage() {
+                    this.message='크라라랄ㄹ라라';
+                }
+                // reversedMessage() {
+                //     return this.message.split('').reverse().join('');
+                // }
+            },
+            computed:{
+                reversedMessage() {
+                    return this.message.split('').reverse().join('');
+                }
+            }
+
+        })
+    </script>
+</body>
+</html>
