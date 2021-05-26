@@ -48,7 +48,6 @@ import ToDos from './components/ToDos';
 
 export default {
   name: 'App',
-
   components: {
     ToDos: ToDos,
   },
