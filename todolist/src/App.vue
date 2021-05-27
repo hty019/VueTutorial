@@ -51,48 +51,26 @@
       </v-row>
       <v-row class="text-center"> <!-- 리스트 구간 -->
         <v-col class="d-flex justify-center">
-          <v-col cols="8">
-            <ul>
-              <v-list-item v-for="todo in filteredList"
-                           :key="todo.id"
-                           @mouseenter.stop="showDelBtn(todo.id)"
-                           @mouseleave.stop="hideDelBtn()"
-              >
-                <v-text-field v-if="edit===todo.id"
-                              v-model="todo.content"
-                              @keyup.enter="editToDo"
-                              @focusout="editDone(todo.content)"
-                              autofocus/> <!-- 수정 입력 행 -->
-                <template v-else>
-                  <v-col cols="1"> <!--체크박스-->
-                    <v-checkbox v-model="todo.state"
-                                @click="saveList"
-                    ></v-checkbox>
-                  </v-col>
-                  <v-col cols="10" class="text-left"> <!--내용-->
-                    <span @dblclick="editShow(todo.id)">{{todo.content}}</span>
-                  </v-col>
-                  <v-col cols="1"><!--삭제버튼-->
-                    <v-btn v-show="delBtn===todo.id"
-                           @click="delTodo(todo.id)"
-                    >삭제</v-btn>
-                  </v-col>
-                </template>
-              </v-list-item>
-            </ul>
-          </v-col>
+          <print-to-do
+              :filteredList="filteredList"
+              :edit="edit"
+              :delBtn="delBtn"
+              @showDelBtn="showDelBtn"
+              @hideDelBtn="hideDelBtn"
+              @editToDo="editToDo"
+              @saveList="saveList"
+              @editShow="editShow"
+              @delTodo="delTodo"
+          />
         </v-col>
       </v-row>
       <v-row> <!-- 필터 버튼 -->
         <v-col class="d-flex justify-center">
-          <v-col cols="8" class="d-flex justify-center">
-            <div v-show="todolist.length>0">
-              <v-btn @click="showAllTodo">전체</v-btn>
-              <v-btn @click="showTodo">할 일</v-btn>
-              <v-btn @click="showDone">완료</v-btn>
-              <v-btn v-show="!todolist.every((v)=>!v.state)" @click="delDone">완료 삭제</v-btn>
-            </div>
-          </v-col>
+          <filter-to-do :todolist="todolist"
+          @showAllTodo="showAllTodo"
+          @showTodo="showTodo"
+          @showDone="showDone"
+          @delDone="delDone"/>
         </v-col>
       </v-row>
     </v-main>
@@ -101,10 +79,14 @@
 
 <script>
 import InputToDo from '@/components/InputToDo';
+import PrintToDo from "@/components/PrintToDo";
+import FilterToDo from "@/components/FilterToDo";
 
 export default {
   name: 'App',
   components : {
+    FilterToDo,
+    PrintToDo,
     InputToDo,
   },
   data: () => ({
@@ -202,8 +184,8 @@ export default {
     /**
      * 엔터 입력 시 수정 완료
      */
-    editToDo(evt) {
-      if(evt.target._value===''){ //수정 후 공백이라면 해당 항목을 삭제
+    editToDo(content) {
+      if(content===''){ //수정 후 공백이라면 해당 항목을 삭제
         this.delTodo(this.edit)
       }
       this.edit=''
