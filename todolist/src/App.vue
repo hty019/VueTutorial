@@ -152,7 +152,7 @@ export default {
           return {
             id:v.id,
             content:v.content,
-            state:false
+            state:false //구조가 같다 t/f 를 여기에 대입
           }
         });
       }else{
@@ -198,7 +198,7 @@ export default {
         this.delTodo(this.edit)
       }
       this.edit=''
-      this.saveList()
+      this.saveList() //투두리스트 재할당
     },
     /**
      * 포커스 아웃 시 수정 완료
@@ -225,12 +225,12 @@ export default {
     }
   },
   computed:{
-    filteredList() {
+    filteredList() { //
       switch(this.type) {
         case 0: return this.todolist
         case 1: return this.todolist.filter((v)=>!v.state)
         case 2: return this.todolist.filter((v)=>v.state)
-        default: return null
+        default: return null // 빈배열 반환 추천
       }
     }
   }
