@@ -24,17 +24,6 @@
           width="100"
         />
       </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
     </v-app-bar>
     <v-main>
       <v-row class="text-center">
@@ -46,7 +35,10 @@
       </v-row>
       <v-row class="pa-5 align-center"> <!-- 입력 행 -->
         <v-col class="d-flex justify-center">
-            <input-to-do @addToDo="addToDo" @allChk="allChk"/>
+            <input-to-do
+                @addToDo="addToDo"
+                @allChk="allChk"
+            />
         </v-col>
       </v-row>
       <v-row class="text-center"> <!-- 리스트 구간 -->
@@ -66,11 +58,14 @@
       </v-row>
       <v-row> <!-- 필터 버튼 -->
         <v-col class="d-flex justify-center">
-          <filter-to-do :todolist="todolist"
-          @showAllTodo="showAllTodo"
-          @showTodo="showTodo"
-          @showDone="showDone"
-          @delDone="delDone"/>
+          <filter-to-do
+              :todolist="todolist"
+              :type="type"
+              @showAllTodo="showAllTodo"
+              @showTodo="showTodo"
+              @showDone="showDone"
+              @delDone="delDone"
+          />
         </v-col>
       </v-row>
     </v-main>
@@ -101,8 +96,10 @@ export default {
    */
   created() {
     const localList=localStorage.getItem(this.STORAGE_KEY);
-    if(localList!=='null'){
+    if(localList!==null){
       this.todolist=JSON.parse(localList)
+    }else {
+      localStorage.setItem(this.STORAGE_KEY,JSON.stringify(this.todolist));
     }
   },
   methods:{
@@ -110,15 +107,16 @@ export default {
      * 할 일 추가 (Immutable 방식으로 변경)
      */
     addToDo(userInput) {
-      const toDos=Object.assign([],this.todolist)
       if(userInput.length>0){
-        const id=(toDos.length>0?toDos[toDos.length-1].id+1:0)
-        toDos.push({
-          id:id,
-          content:userInput,
-          state:false
-        });
-        this.todolist=toDos
+        const id=(this.todolist.length>0?this.todolist[this.todolist.length-1].id+1:0)
+        this.todolist = [
+          ...this.todolist,
+          {
+            id:id,
+            content:userInput,
+            state:false
+          }
+        ];
       }
     },
     /**
@@ -149,13 +147,23 @@ export default {
      * 전체 완료 체크 or 전체 완료 해제 (Immutable 적용)
      */
     allChk() {
-      const toDos=Object.assign([],this.todolist)
-      if(toDos.every((v)=>v.state)){
-        toDos.forEach((v)=>v.state=false)
+      if(this.todolist.every((v)=>v.state)){
+        this.todolist=this.todolist.map((v)=>{
+          return {
+            id:v.id,
+            content:v.content,
+            state:false
+          }
+        });
       }else{
-        toDos.forEach((v)=>v.state=true)
+        this.todolist=this.todolist.map((v)=>{
+          return {
+            id:v.id,
+            content:v.content,
+            state:true
+          }
+        })
       }
-      this.todolist=toDos
     },
     /**
      * 전체 목록 출력
@@ -179,6 +187,7 @@ export default {
      * 수정 폼 출력
      */
     editShow(id){
+
       this.edit=id
     },
     /**

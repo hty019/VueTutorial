@@ -14,10 +14,18 @@
         <template v-else>
           <v-col cols="1"> <!--체크박스-->
             <v-checkbox v-model="todo.state"
-                        @click="saveList"></v-checkbox>
+                        @change="saveList"></v-checkbox>
           </v-col>
-          <v-col cols="10" class="text-left"> <!--내용-->
-            <span @dblclick="editShow(todo.id)">{{todo.content}}</span>
+          <v-col
+              cols="10"
+              class="text-left"
+              :class="{'done':todo.state}"
+          > <!--내용-->
+            <span
+                @dblclick="editShow(todo)"
+            >
+              {{todo.content}}
+            </span>
           </v-col>
           <v-col cols="1"><!--삭제버튼-->
             <v-btn v-show="delBtn===todo.id"
@@ -47,8 +55,10 @@ export default {
     saveList() {
       this.$emit('saveList')
     },
-    editShow(id) {
-      this.$emit('editShow',id)
+    editShow(todo) {
+      if(!todo.state){ //완료 상태일 때에는 수정이 될 수 없도록 함
+        this.$emit('editShow',todo.id)
+      }
     },
     delTodo(id){
       this.$emit('delTodo',id)
@@ -58,5 +68,11 @@ export default {
 </script>
 
 <style scoped>
-
+.done {
+  background-color: rgba(0,0,0,0.1);
+}
+.done span {
+  text-decoration: line-through;
+  color:rgba(0,0,0,0.5);
+}
 </style>
