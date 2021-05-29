@@ -1,10 +1,10 @@
 <template>
-  <v-col class="d-flex justify-center" cols="8">
-    <v-btn @click="allChk" class="align-self-center">
-<!--      <v-icon>fas fa-chevron-down</v-icon>-->all
-    </v-btn>
-    <v-text-field v-model="userInput" @keyup.enter="addToDo"/>
-  </v-col>
+  <div>
+    <v-col class="d-flex justify-center" cols="8">
+      <slot></slot>
+      <v-text-field v-model="userInput" @keyup.enter="addToDo"/>
+    </v-col>
+  </div>
 </template>
 
 <script>
@@ -16,14 +16,11 @@
       }
     },
     methods: {
-      allChk() {
-        this.$emit('allChk');
-      },
       addToDo() {
-        this.$emit('addToDo',this.userInput);
-        this.$nextTick()
-        this.userInput='';
-      }
+          this.$emit('add-to-do',this.userInput)
+          this.$nextTick()
+          this.userInput=''
+        }
     }
   }
 </script>
