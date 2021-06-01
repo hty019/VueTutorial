@@ -1,7 +1,6 @@
 <template>
   <v-col class="d-flex justify-center" cols="8">
-    <slot></slot>
-    <v-text-field v-model.trim="userInput" @keyup.enter="addToDo"/>
+    <v-text-field v-model.trim="userInput" @keyup.enter="addToDo" clearable/>
   </v-col>
 </template>
 
@@ -15,13 +14,9 @@
     },
     methods: {
       addToDo() {
-        if(this.userInput.length>0){
+        if(!this.userInput){
           this.$emit('add-to-do',this.userInput)
-          this.$nextTick(
-
-              ()=>{여기에}
-          )
-          this.userInput=''
+          this.$nextTick(()=>{this.userInput=''})
         }
       }
     }
