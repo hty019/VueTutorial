@@ -1,10 +1,7 @@
 <template>
-  <div>
-    <v-col class="d-flex justify-center" cols="8">
-      <slot></slot>
-      <v-text-field v-model="userInput" @keyup.enter="addToDo"/>
-    </v-col>
-  </div>
+  <v-col class="d-flex justify-center" cols="8">
+    <v-text-field v-model.trim="userInput" @keyup.enter="addToDo" clearable/>
+  </v-col>
 </template>
 
 <script>
@@ -12,15 +9,16 @@
     name: 'InputToDo',
     data:()=> {
       return {
-        userInput: "",
+        userInput: "", //trim v-model
       }
     },
     methods: {
       addToDo() {
+        if(!this.userInput){
           this.$emit('add-to-do',this.userInput)
-          this.$nextTick()
-          this.userInput=''
+          this.$nextTick(()=>{this.userInput=''})
         }
+      }
     }
   }
 </script>
