@@ -24,26 +24,42 @@
           width="100"
         />
       </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
     </v-app-bar>
 
     <v-main>
+<<<<<<< HEAD
       <HelloWorld/>
+=======
+      <v-row class="text-center">
+        <v-col class="pa-5">
+          <h1 class="display-2 font-weight-bold mb-3"> <!--제목-->
+            ToDos
+          </h1>
+        </v-col>
+      </v-row>
+      <v-row class="pa-5 align-center"> <!-- 입력 행 -->
+        <v-col class="d-flex justify-center">
+            <input-to-do @add-to-do="addToDo">
+              <v-btn @click="allChk" class="align-self-center">
+                all
+              </v-btn>
+            </input-to-do>
+        </v-col>
+      </v-row>
+      <v-row class="text-center"> <!-- 리스트 구간 -->
+        <v-col class="d-flex justify-center">
+          <print-to-do
+              :to-do-list="todolist"
+          />
+        </v-col>
+      </v-row>
+>>>>>>> f482bcae88c3eb93e4e872e2ee998986e95eca31
     </v-main>
   </v-app>
 </template>
 
 <script>
+<<<<<<< HEAD
 import HelloWorld from './components/HelloWorld';
 
 export default {
@@ -51,10 +67,78 @@ export default {
 
   components: {
     HelloWorld,
+=======
+import InputToDo from '@/components/InputToDo';
+import PrintToDo from "@/components/PrintToDo";
+
+export default {
+  name: 'App',
+  components : {
+    PrintToDo,
+    InputToDo,
+>>>>>>> f482bcae88c3eb93e4e872e2ee998986e95eca31
   },
 
   data: () => ({
+<<<<<<< HEAD
     //
   }),
+=======
+    todolist:[],
+    STORAGE_KEY:'todos-demo',
+  }),
+  /**
+   * 페이지 진입 시 로컬 스토리지 로드
+   */
+  created() {
+    const localList=localStorage.getItem(this.STORAGE_KEY);
+    if(localList!==null){
+      this.todolist=JSON.parse(localList)
+    }else {
+      localStorage.setItem(this.STORAGE_KEY,JSON.stringify(this.todolist));
+    }
+  },
+  methods:{
+    addToDo(userInput) {
+      if (userInput.length > 0) {
+        const id = (this.todolist.length > 0 ? this.todolist[this.todolist.length - 1].id + 1 : 1)
+        this.todolist = [
+          ...this.todolist,
+          {
+            id: id,
+            content: userInput,
+            state: false
+          }
+        ]
+      }
+    },
+    /**
+     * 리스트 로컬스토리지 저장
+     */
+    saveList() {
+      localStorage.setItem(this.STORAGE_KEY,JSON.stringify(this.todolist))
+    },
+    /**
+     * 전체 완료 체크 or 전체 완료 해제 (Immutable 적용)
+     */
+    allChk() {
+      const state=this.todolist.every((v)=>v.state)
+        this.todolist=this.todolist.map((v)=>{
+          return {
+            id:v.id,
+            content:v.content,
+            state:state
+          }
+        });
+    },
+  },
+  watch:{
+    todolist:{
+      handler(){
+        this.saveList()
+      }
+    }
+  }
+>>>>>>> f482bcae88c3eb93e4e872e2ee998986e95eca31
 };
 </script>

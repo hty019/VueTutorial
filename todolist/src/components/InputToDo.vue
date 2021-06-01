@@ -1,23 +1,26 @@
 <template>
-  <v-col class="d-flex justify-center" cols="8">
-    <v-btn @click="allChk" class="align-self-center">
-      <v-icon>fas fa-chevron-down</v-icon>
-    </v-btn>
-    <v-text-field @keyup.enter="addToDo"/>
-  </v-col>
+  <div>
+    <v-col class="d-flex justify-center" cols="8">
+      <slot></slot>
+      <v-text-field v-model="userInput" @keyup.enter="addToDo"/>
+    </v-col>
+  </div>
 </template>
 
 <script>
   export default {
     name: 'InputToDo',
-    methods: {
-      allChk() {
-        this.$emit('allChk');
-      },
-      addToDo(e) {
-        this.$emit('addToDo',e.target.value);
-        e.target.value=''
+    data:()=> {
+      return {
+        userInput: "",
       }
+    },
+    methods: {
+      addToDo() {
+          this.$emit('add-to-do',this.userInput)
+          this.$nextTick()
+          this.userInput=''
+        }
     }
   }
 </script>
