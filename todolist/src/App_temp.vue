@@ -47,24 +47,26 @@
   </v-app>
 </template>
 
-<script>
-import InputToDo from '@/components/InputToDo';
-import PrintToDo from "@/components/PrintToDo";
-import FilterToDo from "@/components/FilterToDo";
+<script lang="ts">
+import {Component,Vue} from "vue-property-decorator";
+import InputToDo from './components/InputToDo';
+import PrintToDo from "./components/PrintToDo";
+import FilterToDo from "./components/FilterToDo";
 
-export default {
-  name: 'App',
-  components : {
+@Component({
+  components:{
     PrintToDo,
     InputToDo,
     FilterToDo
-  },
+  }
+})
+export default class App_temp extends Vue {
   data: () => ({
     todolist:[],
     type:0,
     STORAGE_KEY:'todos-demo',
     id:1,
-  }),
+  })
   /**
    * 페이지 진입 시 로컬 스토리지 로드
    */

@@ -11,8 +11,11 @@
   </v-col>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {Component,Vue} from 'vue-property-decorator'
+
+@Component
+export default class FilterToDo extends Vue{
   name: "FilterToDo",
   props: [
       'type','hideBtn'

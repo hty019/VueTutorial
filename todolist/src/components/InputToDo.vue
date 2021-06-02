@@ -4,8 +4,11 @@
   </v-col>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+import {Component,Vue} from "vue-property-decorator";
+
+@Component
+export default class InputToDo extends Vue{
     name: 'InputToDo',
     data:()=> {
       return {
@@ -15,6 +18,8 @@
     methods: {
       addToDo() {
         if(!this.userInput){
+          alert('잘못된 입력입니다.')
+        }else {
           this.$emit('add-to-do',this.userInput)
           this.$nextTick(()=>{this.userInput=''})
         }

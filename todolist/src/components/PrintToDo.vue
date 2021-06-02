@@ -5,19 +5,22 @@
                       :readonly="!writable"
                       @keyup.enter="editTodo"
                       @keyup.esc="cancel"
-                      v-model="todo.content"
+                      v-model.trim="todo.content"
+                      @input="$emit('update:todo',todo)"
                       :class="{'text-decoration-line-through':todo.state}"
                       prepend-icon="V"
                       @click:prepend="chkTodo"
-                      append-outer-icon="삭제"
-                      @click:append-outer="delTodo"
-        />
+                      append-outer-icon="X"
+                      @click:append-outer="delTodo"/>
       </v-col>
   </v-list-item>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {Component,Vue} from "vue-property-decorator";
+
+@Component
+export default class PrintToDo extends Vue{
   name: "PrintToDo",
   data:()=>{
     return {
@@ -53,16 +56,17 @@ export default {
     chkTodo() {
       this.cancel()
       this.todo.state=!this.todo.state
-      this.$emit('chk-todo',this.todo)
+      this.$emit('update:todo',this.todo)
     },
     /**
      * 할 일 편집
      */
     editTodo() {
-      if(!this.todo.content===false) {
-        this.writable=false
-        this.$emit('edit-to-do',this.todo)
+      if(!this.todo.content) {
+        alert('잘못된 입력입니다.')
+      }else{
         this.origin=this.todo.content
+        this.writable=false
       }
     },
     /**
