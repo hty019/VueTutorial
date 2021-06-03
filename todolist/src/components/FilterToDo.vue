@@ -3,7 +3,7 @@
     <div v-show="!hideBtn">
       <v-btn v-for="(item, index) in btnName"
              :class="{'blue':type===index}"
-             @click="$emit('update:type',index)"
+             @click="type=index"
              v-text="item"
              :key="index"/>
       <v-btn @click="delDone">완료 삭제</v-btn>
@@ -12,21 +12,20 @@
 </template>
 
 <script lang="ts">
-import {Component,Vue} from 'vue-property-decorator'
+import {Component, Prop, PropSync, Vue} from 'vue-property-decorator'
 
 @Component
 export default class FilterToDo extends Vue{
-  name: "FilterToDo",
-  props: [
-      'type','hideBtn'
-  ],
-  data:() => ({
-   btnName:['전체','할 일','완료']
-  }),
-  methods: {
-    delDone() {
-      this.$emit('del-done')
-    }
+
+  @PropSync({required:true})
+  type!:number
+  @Prop({required:true})
+  hideBtn!:boolean
+
+  btnName=['전체','할 일','완료']
+
+  delDone() {
+    this.$emit('del-done')
   }
 }
 </script>

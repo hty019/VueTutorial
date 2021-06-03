@@ -9,21 +9,19 @@ import {Component,Vue} from "vue-property-decorator";
 
 @Component
 export default class InputToDo extends Vue{
-    name: 'InputToDo',
-    data:()=> {
-      return {
-        userInput: "", //trim v-model
-      }
-    },
-    methods: {
-      addToDo() {
-        if(!this.userInput){
-          alert('잘못된 입력입니다.')
-        }else {
-          this.$emit('add-to-do',this.userInput)
-          this.$nextTick(()=>{this.userInput=''})
-        }
-      }
+  //data
+  userInput="";
+
+  addToDo() {
+    if(!this.userInput){
+      alert('잘못된 입력입니다.')
+    }else {
+      this.$emit('add-to-do',this.userInput)
+      this.$nextTick(()=>{this.userInput=''})
     }
   }
+  test(userInputs:string) {
+    console.log(userInputs)
+  }
+}
 </script>

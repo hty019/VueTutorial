@@ -33,7 +33,7 @@
             <v-row> <!-- 필터 버튼 -->
               <v-col class="d-flex justify-center">
                 <filter-to-do :type.sync="type"
-                              :hide-del-btn="hideBtn"
+                              :hide-btn="hideBtn"
                               @del-done="delDone"
                 />
               </v-col>
@@ -47,112 +47,119 @@
   </v-app>
 </template>
 
-<script>
-import InputToDo from '@/components/InputToDo';
-import PrintToDo from "@/components/PrintToDo";
-import FilterToDo from "@/components/FilterToDo";
+<script lang="ts">
+import {Component,Watch,Vue} from "vue-property-decorator";
+import {Todo} from '@/types/options';
 
-export default {
-  name: 'App',
-  components : {
+import InputToDo from "@/components/InputToDo.vue";
+import PrintToDo from "@/components/PrintToDo.vue";
+import FilterToDo from "@/components/FilterToDo.vue";
+
+@Component({
+  components:{
     PrintToDo,
     InputToDo,
     FilterToDo
-  },
-  data: () => ({
-    todolist:[],
-    type:0,
-    STORAGE_KEY:'todos-demo',
-    id:1,
-  }),
+  }
+})
+export default class App_temp extends Vue {
+  //data
+  todoList: Todo[] = [];
+  type = 0;
+  STORAGE_KEY = 'todos-demo';
+
   /**
    * 페이지 진입 시 로컬 스토리지 로드
    */
-  created() {
-    const localList=localStorage.getItem(this.STORAGE_KEY);
-    if(localList!==null){
-      this.todolist=JSON.parse(localList)
-    }
-  },
-  methods:{
-    /**
-     * 할 일 추가 (Immutable 방식으로 변경)
-     */
-    addToDo(userInput) {
-      this.todolist = [
-        ...this.todolist,
-        {
-          id:this.newId,
-          content:userInput,
-          state:false
-        }
-      ]
-      this.type=0
-    },
-    /**
-     * 항목 삭제
-     */
-    delTodo(todo){
-      this.todolist=this.todolist.filter((v)=>v.id!==todo.id)
-    },
-    /**
-     * 리스트 로컬스토리지 저장
-     */
-    saveList() {
-      localStorage.setItem(this.STORAGE_KEY,JSON.stringify(this.todolist))
-    },
-    /**
-     * 전체 완료 체크 or 전체 완료 해제 (Immutable 적용)
-     */
-    allChk() {
-      const state=!this.todolist.every((v)=>v.state)
-        this.todolist=this.todolist.map((v)=>{
-          return {
-            ...v,
-            state:state
-          }
-        });
-    },
-    /**
-     * 완료항목 삭제
-     */
-    delDone() {
-      this.todolist=this.todolist.filter((v)=>!v.state)
-    },
-  },
-  watch:{
-    todolist:{
-      handler(){
-        this.saveList()
-      }
-    }
-  },
-  computed:{
-    filteredList() {
-      switch(this.type) {
-        case 0: return this.todolist
-        case 1: return this.todolist.filter((v)=>!v.state)
-        case 2: return this.todolist.filter((v)=>v.state)
-        default: return [] // 빈배열 반환
-      }
-    },
-    todoIsNull() {
-      return !(!this.todolist===false&&this.todolist.length>0)
-    },
-    newId() {
-      if(this.todoIsNull){
-        return 1
-      }else {
-        return this.todolist[this.todolist.length-1].id+1
-      }
-    },
-    hideBtn() {
-      if(this.todoIsNull) {
-        return true
-      }else {
-        return !this.todolist.some(v=>v.state===true)
-      }
+  created(): void {
+    const localList = localStorage.getItem(this.STORAGE_KEY);
+    if (localList !== null) {
+      this.todoList = JSON.parse(localList)
     }
   }
-};
+
+  @Watch("todoList")
+  handler() {
+    this.saveList()
+  }
+
+  //computed
+  get filteredList():Todo[] {
+    switch (this.type) {
+      case 0:
+        return this.todoList
+      case 1:
+        return this.todoList.filter((v) => !v.state)
+      case 2:
+        return this.todoList.filter((v) => v.state)
+      default:
+        return [] // 빈배열 반환
+    }
+  }
+
+  get todoIsNull():boolean {
+    return !(!this.todoList === false && this.todoList.length > 0)
+  }
+
+  get newId():number {
+    if (this.todoIsNull) {
+      return 1
+    } else {
+      return this.todoList[this.todoList.length - 1].id + 1
+    }
+  }
+
+  get hideBtn():boolean {
+      return !this.todoList.some(v => v.state === true)
+  }
+
+  /**
+   * 할 일 추가 (Immutable 방식으로 변경)
+   */
+  protected addToDo(userInput:string) {
+    this.todoList = [
+      ...this.todoList,
+      {
+        id: this.newId,
+        content: userInput,
+        state: false
+      }
+    ]
+    this.type = 0
+  }
+
+  /**
+   * 항목 삭제
+   */
+  protected delTodo(todo:Todo) {
+    this.todoList = this.todoList.filter((v) => v.id !== todo.id)
+  }
+
+  /**
+   * 리스트 로컬스토리지 저장
+   */
+  protected saveList() {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.todoList))
+  }
+
+  /**
+   * 전체 완료 체크 or 전체 완료 해제 (Immutable 적용)
+   */
+  protected allChk() {
+    const state = !this.todoList.every((v) => v.state)
+    this.todoList = this.todoList.map((v) => {
+      return {
+        ...v,
+        state: state
+      }
+    });
+  }
+
+  /**
+   * 완료항목 삭제
+   */
+  protected delDone() {
+    this.todoList = this.todoList.filter((v) => !v.state)
+  }
+}
 </script>
