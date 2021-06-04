@@ -5,8 +5,8 @@
                       :readonly="!writable"
                       @keyup.enter="editTodo"
                       @keyup.esc="cancel"
-                      v-model.trim="todo.content"
-                      :class="{'text-decoration-line-through':todo.state}"
+                      v-model.trim="todoItem.content"
+                      :class="{'text-decoration-line-through':todoItem.state}"
                       prepend-icon="V"
                       @click:prepend="chkTodo"
                       append-outer-icon="X"
@@ -16,61 +16,62 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, PropSync, Vue} from "vue-property-decorator";
+import {Component, Emit,PropSync, Vue} from "vue-property-decorator";
 import {Todo} from '@/types/options';
-
 
 @Component
 export default class PrintToDo extends Vue{
 
-  @PropSync()
-  private todo!: Todo
+  @PropSync('todo')
+  todoItem!: Todo
 
   writable = false
   origin!:string
 
-  mounted() {
-    this.origin=this.todo.content
+  mounted():void {
+    this.origin=this.todoItem.content
   }
 
   /**
    * 완료 항목이 아닐 때에만 수정하기
    */
-  toggleWritable() {
-    if(!this.todo.state) {
+  toggleWritable():void {
+    if(!this.todoItem.state) {
       this.writable=true
     }
   }
   /**
    * 이벤트 취소
    */
-  cancel() {
-    this.todo.content=this.origin
+  cancel():void {
+    this.todoItem.content=this.origin
     this.writable=false
   }
   /**
    * 완료 체크
    */
-  chkTodo() {
+  chkTodo():void {
     this.cancel()
-    this.todo.state=!this.todo.state
+    this.todoItem={...this.todoItem, state:!this.todoItem.state} //값을 재할당하지 않으면 update가 전달되지 않음
   }
   /**
    * 할 일 편집
    */
-  editTodo() {
-    if(!this.todo.content) {
+  editTodo():void {
+    if(!this.todoItem.content) {
       alert('잘못된 입력입니다.')
     }else{
-      this.origin=this.todo.content
+      this.origin=this.todoItem.content
       this.writable=false
+      this.todoItem={...this.todoItem}
     }
   }
   /**
    * 항목 삭제
    */
-  delTodo(){
-    this.$emit('del-to-do',this.todo)
+  @Emit('del-to-do')
+  delTodo():Todo {
+    return this.todoItem;
   }
 }
 </script>

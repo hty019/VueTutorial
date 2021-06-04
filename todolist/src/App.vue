@@ -79,7 +79,7 @@ export default class App_temp extends Vue {
   }
 
   @Watch("todoList")
-  handler() {
+  handler():void {
     this.saveList()
   }
 
@@ -116,7 +116,7 @@ export default class App_temp extends Vue {
   /**
    * 할 일 추가 (Immutable 방식으로 변경)
    */
-  protected addToDo(userInput:string) {
+  protected addToDo(userInput:string):void {
     this.todoList = [
       ...this.todoList,
       {
@@ -131,21 +131,21 @@ export default class App_temp extends Vue {
   /**
    * 항목 삭제
    */
-  protected delTodo(todo:Todo) {
+  protected delTodo(todo:Todo):void {
     this.todoList = this.todoList.filter((v) => v.id !== todo.id)
   }
 
   /**
    * 리스트 로컬스토리지 저장
    */
-  protected saveList() {
+  protected saveList():void {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.todoList))
   }
 
   /**
    * 전체 완료 체크 or 전체 완료 해제 (Immutable 적용)
    */
-  protected allChk() {
+  protected allChk():void {
     const state = !this.todoList.every((v) => v.state)
     this.todoList = this.todoList.map((v) => {
       return {
@@ -158,7 +158,7 @@ export default class App_temp extends Vue {
   /**
    * 완료항목 삭제
    */
-  protected delDone() {
+  protected delDone():void {
     this.todoList = this.todoList.filter((v) => !v.state)
   }
 }
