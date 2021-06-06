@@ -38,7 +38,9 @@ export default class PrintToDo extends Vue {
 	 * 완료 항목이 아닐 때에만 수정하기
 	 */
 	toggleWritable(): void {
-		if (!this.todoItem.state) {
+		if (this.todoItem.state) {
+			alert('완료 상태에선 수정할 수 없습니다.');
+		} else {
 			this.writable = true;
 		}
 	}
@@ -60,12 +62,12 @@ export default class PrintToDo extends Vue {
 	 * 할 일 편집
 	 */
 	editTodo(): void {
-		if (!this.todoItem.content) {
-			alert('잘못된 입력입니다.');
-		} else {
+		if (this.todoItem.content) {
 			this.origin = this.todoItem.content;
 			this.writable = false;
 			this.todoItem = { ...this.todoItem };
+		} else {
+			alert('잘못된 입력입니다.');
 		}
 	}
 	/**

@@ -79,7 +79,7 @@ export default class App_temp extends Vue {
 	 */
 	created(): void {
 		const localList = localStorage.getItem(this.STORAGE_KEY);
-		if (localList !== null) {
+		if (localList) {
 			this.todoList = JSON.parse(localList);
 		}
 	}

@@ -17,11 +17,11 @@ export default class InputToDo extends Vue {
 	userInput = '';
 
 	validation(): void {
-		if (!this.userInput) {
-			alert('잘못된 입력입니다.');
-		} else {
+		if (this.userInput) {
 			this.addToDo();
 			this.$nextTick(() => (this.userInput = ''));
+		} else {
+			alert('잘못된 입력입니다.');
 		}
 	}
 
