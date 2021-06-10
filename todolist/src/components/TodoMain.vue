@@ -50,12 +50,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { TwodoItem } from "@/definitions/entities";
+import { deleteApi, getApi, postApi, putApi } from "@/utils/apis";
 
-import InputToDo from "@/views/twodolist/InputToDo";
+import InputToDo from "@/views/twodolist/InputToDo.vue";
 import PrintToDo from "@/views/twodolist/PrintToDo.vue";
 import FilterToDo from "@/views/twodolist/FilterToDo.vue";
+import { defaultTwodo } from "@/definitions/defaults";
 
 @Component({
   components: {
@@ -64,23 +66,22 @@ import FilterToDo from "@/views/twodolist/FilterToDo.vue";
     FilterToDo,
   },
 })
+
 export default class TwodoMain extends Vue {
   // data
   todoList: TwodoItem[] = [];
   type = 0;
-  STORAGE_KEY = "todos-demo";
+  loading=false;
+  saving=false;
+  userId!: number;
+  newItem: TwodoItem = defaultTwodo();
   /**
    * 페이지 진입 시 로컬 스토리지 로드
    */
-  created(): void {
-    const localList = localStorage.getItem(this.STORAGE_KEY);
-    if (localList) {
-      this.todoList = JSON.parse(localList);
-    }
-  }
-  @Watch("todoList")
-  handler(): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.todoList));
+  protected async created(): Promise<void> { // 객체를 넘긴다면, Id를 넘긴다면, TwodoId 넘길 때, memberId 넘길 때
+    this.userId = this.$store.getters.user.id;
+    const response = await getApi<TwodoItem[]>(`twodo/${this.userId}`);
+    this.todoList = response?.data || [];
   }
   // computed
   get filteredList(): TwodoItem[] {
@@ -88,63 +89,72 @@ export default class TwodoMain extends Vue {
       case 0:
         return this.todoList;
         case 1:
-          return this.todoList.filter(v => !v.state);
+          return this.todoList.filter(v => !v.status);
           case 2:
-            return this.todoList.filter(v => v.state);
+            return this.todoList.filter(v => v.status);
             default:
               return []; // 빈배열 반환
         }
   }
-  get todoIsNull(): boolean {
-    return !(!!this.todoList && this.todoList.length > 0);
-  }
-  get newId(): number {
-    if (this.todoIsNull) {
-      return 1;
-    } else {
-      return this.todoList[this.todoList.length - 1].id + 1;
-    }
-  }
   get hideBtn(): boolean {
-    return !this.todoList.some(v => v.state);
+    return !this.todoList.some(v => v.status);
   }
   /**
    * 할 일 추가 (Immutable 방식으로 변경)
    */
-  protected addToDo(userInput: string): void {
-    this.todoList = [
-        ...this.todoList,
-      {
-        id: this.newId,
-        content: userInput,
-        state: false,
-      },
-    ];
+  protected async addToDo(userInput: string): Promise<void> {
+    this.loading = true;
+    const payload = { ...this.newItem, memberId: this.userId, content: userInput };
+    const response = await postApi<TwodoItem>("twodo/", payload);
+    this.loading = false;
+    if (typeof response.data === "undefined") {
+      return;
+    } else {
+      this.todoList = [
+          ...this.todoList,
+        response.data,
+      ];
+    }
     this.type = 0;
-  }
-  /**
-   * 항목 삭제
-   */
-  protected delTodo(todo: TwodoItem): void {
-    this.todoList = this.todoList.filter(v => v.id !== todo.id);
   }
   /**
    * 전체 완료 체크 or 전체 완료 해제 (Immutable 적용)
    */
-  protected allChk(): void {
-    const state = !this.todoList.every(v => v.state);
-    this.todoList = this.todoList.map(v => {
+  protected async allChk(): Promise<void> {
+    const status = !this.todoList.every(item => item.status);
+    const payload = this.todoList.map(item => {
       return {
-        ...v,
-        state: state,
+        ...item,
+        status: status,
       };
     });
+    const response = await putApi<TwodoItem[]>("twodo/", payload);
+    if (response?.code?.startsWith("S")) {
+      this.todoList = response?.data || [];
+    }
+  }
+  /**
+   * 항목 삭제
+   */
+  protected async delTodo(todo: TwodoItem): Promise<void> {
+    this.saving = true;
+    const response = await deleteApi<TwodoItem>(`twodo/${todo.id}`);
+    this.saving = false;
+
+    if (response?.code?.startsWith("S")) {
+      this.todoList = this.todoList.filter(todo => {
+        return todo.id !== (response.data?.id || 0);
+      });
+    }
   }
   /**
    * 완료항목 삭제
    */
-  protected delDone(): void {
-    this.todoList = this.todoList.filter(v => !v.state);
+  protected async delDone(): Promise<void> {
+    const response = await deleteApi<TwodoItem[]>(`twodo/all/${this.userId}`);
+    if (response?.code?.startsWith("S")) {
+      this.todoList = this.todoList.filter(v => !v.status);
+    }
   }
 }
 </script>
