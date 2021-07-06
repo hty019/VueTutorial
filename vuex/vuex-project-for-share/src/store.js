@@ -27,9 +27,13 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-
+    addUsers: (state, payload) => {
+      state.allUsers = [...state.allUsers, payload];
+    }
   },
   actions: {
-
-  }
+    addUsers: ({ commit }, payload) => {
+      commit('addUsers', payload);
+    }
+  },
 })

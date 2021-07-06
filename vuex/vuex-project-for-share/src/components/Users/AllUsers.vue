@@ -21,6 +21,7 @@
 
 <script>
 import { EventBus } from '@/main.js'
+import { mapGetters } from 'vuex'
 
   export default {
     mounted() {
