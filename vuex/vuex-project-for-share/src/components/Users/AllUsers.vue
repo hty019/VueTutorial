@@ -27,6 +27,13 @@ import { EventBus } from '@/main.js'
       EventBus.$on('signUp', users => {
         this.$store.state.allUsers = [...this.$store.state.allUsers, users];
       })
+    },
+    computed: {
+      ...mapGetters({
+        count: 'allUsersCount',
+        seouls: 'countOfSeoul',
+        percent: 'percentOfSeoul'
+      })
     }
   }
 </script>
